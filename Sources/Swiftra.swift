@@ -1,0 +1,94 @@
+/*
+ The MIT License (MIT)
+
+ Copyright (c) 2015 Shun Takebayashi
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+*/
+
+#if os(OSX)
+    import Darwin
+#endif
+
+import struct http4swift.HTTPRequest
+import struct http4swift.HTTPServer
+import struct http4swift.SocketAddress
+import struct http4swift.Socket
+
+public typealias Handler = (HTTPRequest) -> (ResponseSource)
+
+class Router {
+    static let sharedRouter = Router()
+
+    var patterns = [(String, String, Handler)]()
+
+    func addPattern(method method: String, pattern: String, handler: Handler) {
+        patterns.append((method, pattern, handler))
+    }
+}
+
+public func get(path: String, handler: Handler) {
+    Router.sharedRouter.addPattern(method: "GET", pattern: path, handler: handler)
+}
+
+public func post(path: String, handler: Handler) {
+    Router.sharedRouter.addPattern(method: "POST", pattern: path, handler: handler)
+}
+
+public func put(path: String, handler: Handler) {
+    Router.sharedRouter.addPattern(method: "PUT", pattern: path, handler: handler)
+}
+
+public func delete(path: String, handler: Handler) {
+    Router.sharedRouter.addPattern(method: "DELETE", pattern: path, handler: handler)
+}
+
+public func head(path: String, handler: Handler) {
+    Router.sharedRouter.addPattern(method: "HEAD", pattern: path, handler: handler)
+}
+
+public func serve(port: UInt16) {
+    let addr = SocketAddress(domain: AF_INET, port: port)
+    guard let sock = Socket(domain: AF_INET, type: SOCK_STREAM) else {
+        return
+    }
+    guard let server = HTTPServer(socket: sock, addr: addr) else {
+        return
+    }
+
+    server.serve { (request, writer) in
+        var response: Response?
+        for entry in Router.sharedRouter.patterns {
+            if entry.0 == request.method && entry.1 == request.path {
+                response = entry.2(request).response()
+                break
+            }
+        }
+        if response == nil {
+            response = Response.notFound()
+        }
+        writer.write("HTTP/1.0 \(response!.status) \(response!.statusMessage)\r\n")
+        writer.write("Content-Length: \(response!.body.characters.count)\r\n")
+        for header in response!.headers {
+            writer.write("\(header.0): \(header.1)\r\n")
+        }
+        writer.write("\r\n")
+        writer.write(response!.body)
+    }
+}
