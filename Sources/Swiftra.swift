@@ -77,7 +77,8 @@ public func serve(port: UInt16) {
             }
         }
         if response == nil {
-            response = Response.notFound()
+            response = Response(.NotFound)
+            response!.body = Response.Status.NotFound.description
         }
         writer.write("HTTP/1.0 \(response!.status) \(response!.status.description)\r\n")
         writer.write("Content-Length: \(response!.body.characters.count)\r\n")

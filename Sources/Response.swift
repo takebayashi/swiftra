@@ -87,14 +87,6 @@ public struct Response {
 
 }
 
-extension Response {
-
-    static func notFound() -> Response {
-        return Response(status: .NotFound, headers: ["Content-Type": "text/plain"], body: "Not Found")
-    }
-
-}
-
 public protocol ResponseSource {
 
     func response() -> Response
