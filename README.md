@@ -10,11 +10,15 @@ See [swiftra-example](https://github.com/takebayashi/swiftra-example).
 import swiftra
 
 get("/hello") { req in
-    return "Hello, World!"
+    return "Hello, world!"
 }
 
-post("/404") { req in
-    return Response(status: 404, headers: ["Content-Type": "text/plain"], body: "The page you requested was not found")
+post("/form") { req in
+    return "Hello: \(req.body)"
+}
+
+get("/404") { req in
+    return Response(.NotFound)
 }
 
 serve(8080)
