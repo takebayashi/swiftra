@@ -22,10 +22,6 @@
  SOFTWARE.
 */
 
-#if os(OSX)
-    import Darwin
-#endif
-
 import struct http4swift.HTTPRequest
 import struct http4swift.HTTPServer
 import struct http4swift.SocketAddress
@@ -64,8 +60,8 @@ public func head(path: String, handler: Handler) {
 }
 
 public func serve(port: UInt16) {
-    let addr = SocketAddress(domain: AF_INET, port: port)
-    guard let sock = Socket(domain: AF_INET, type: SOCK_STREAM) else {
+    let addr = SocketAddress(port: port)
+    guard let sock = Socket() else {
         return
     }
     guard let server = HTTPServer(socket: sock, addr: addr) else {
