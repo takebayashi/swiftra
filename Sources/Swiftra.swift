@@ -27,7 +27,7 @@ import struct http4swift.HTTPServer
 import struct http4swift.SocketAddress
 import struct http4swift.Socket
 
-public typealias Handler = (HTTPRequest) -> (ResponseSource)
+public typealias Handler = (Request) -> (ResponseSource)
 
 class Router {
     static let sharedRouter = Router()
@@ -72,7 +72,7 @@ public func serve(port: UInt16) {
         var response: Response?
         for entry in Router.sharedRouter.patterns {
             if entry.0 == request.method && entry.1 == request.path {
-                response = entry.2(request).response()
+                response = entry.2(Request(underlying: request)).response()
                 break
             }
         }
