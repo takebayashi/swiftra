@@ -1,4 +1,6 @@
-# Swiftra: Sinatra-like DSL in Swift
+# Swiftra
+
+Swiftra is a library that provides DSLs like Sinatra.
 
 ## Example
 
