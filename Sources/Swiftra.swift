@@ -79,7 +79,7 @@ public func serve(port: UInt16) {
         if response == nil {
             response = Response.notFound()
         }
-        writer.write("HTTP/1.0 \(response!.status) \(response!.statusMessage)\r\n")
+        writer.write("HTTP/1.0 \(response!.status) \(response!.status.description)\r\n")
         writer.write("Content-Length: \(response!.body.characters.count)\r\n")
         for header in response!.headers {
             writer.write("\(header.0): \(header.1)\r\n")
