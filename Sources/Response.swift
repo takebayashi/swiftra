@@ -87,28 +87,6 @@ public struct Response {
 
 }
 
-public protocol ResponseSource {
-
-    func response() -> Response
-
-}
-
-extension Response: ResponseSource {
-
-    public func response() -> Response {
-        return self
-    }
-
-}
-
-extension String: ResponseSource {
-
-    public func response() -> Response {
-        return Response(self)
-    }
-
-}
-
 extension Response.Status: CustomStringConvertible {
 
     public var description: String {
