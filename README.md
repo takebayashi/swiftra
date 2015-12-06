@@ -14,7 +14,7 @@ get("/hello") { req in
 }
 
 post("/form") { req in
-    return "Hello: \(req.body)"
+    return "Hello: \(req.bodyString)"
 }
 
 get("/404") { req in
