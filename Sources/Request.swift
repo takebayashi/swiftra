@@ -32,27 +32,27 @@ public struct Request {
         self.underlying = underlying
     }
 
-    var method: String {
+    public var method: String {
         return underlying.method
     }
 
-    var path: String {
+    public var path: String {
         return underlying.path
     }
 
-    var proto: String {
+    public var proto: String {
         return underlying.proto
     }
 
-    var headers: [String: String] {
+    public var headers: [String: String] {
         return underlying.headers
     }
 
-    var body: [UInt8] {
+    public var body: [UInt8] {
         return underlying.body
     }
 
-    var bodyString: String {
+    public var bodyString: String {
         var chars = body.map { c in return CChar.init(c) }
         chars.append(CChar(0))
         return String.fromCString(chars) ?? ""
