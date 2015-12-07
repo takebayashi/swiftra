@@ -32,9 +32,9 @@ public typealias Handler = (Request) -> (ResponseSource)
 class Router {
     static let sharedRouter = Router()
 
-    var patterns = [(String, String, Handler)]()
+    var patterns = [(String, Matcher, Handler)]()
 
-    func addPattern(method method: String, pattern: String, handler: Handler) {
+    func addPattern(method method: String, pattern: Matcher, handler: Handler) {
         patterns.append((method, pattern, handler))
     }
 }
@@ -71,9 +71,11 @@ public func serve(port: UInt16) {
     server.serve { (request, writer) in
         var response: Response?
         for entry in Router.sharedRouter.patterns {
-            if entry.0 == request.method && entry.1 == request.path {
-                response = entry.2(Request(underlying: request)).response()
-                break
+            if entry.0 == request.method {
+                if let _ = entry.1.match(request.path) {
+                    response = entry.2(Request(underlying: request)).response()
+                    break
+                }
             }
         }
         if response == nil {
