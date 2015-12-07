@@ -48,14 +48,12 @@ public struct Request {
         return underlying.headers
     }
 
-    public var body: [UInt8] {
+    public var body: [CChar] {
         return underlying.body
     }
 
     public var bodyString: String {
-        var chars = body.map { c in return CChar.init(c) }
-        chars.append(CChar(0))
-        return String.fromCString(chars) ?? ""
+        return String.fromCString(body) ?? ""
     }
 
 }
