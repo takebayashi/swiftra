@@ -1,0 +1,7 @@
+box: swiftdocker/swift
+build:
+  steps:
+    - script:
+      name: build
+      code: |
+        swift build
