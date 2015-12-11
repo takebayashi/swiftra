@@ -82,12 +82,12 @@ public func serve(port: UInt16) {
             response = Response(.NotFound)
             response!.body = Response.Status.NotFound.description
         }
-        writer.write("HTTP/1.0 \(response!.status) \(response!.status.description)\r\n")
-        writer.write("Content-Length: \(response!.body.characters.count)\r\n")
+        try writer.write("HTTP/1.0 \(response!.status) \(response!.status.description)\r\n")
+        try writer.write("Content-Length: \(response!.body.characters.count)\r\n")
         for header in response!.headers {
-            writer.write("\(header.0): \(header.1)\r\n")
+            try writer.write("\(header.0): \(header.1)\r\n")
         }
-        writer.write("\r\n")
-        writer.write(response!.body)
+        try writer.write("\r\n")
+        try writer.write(response!.body)
     }
 }
