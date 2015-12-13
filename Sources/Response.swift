@@ -69,16 +69,16 @@ public struct Response {
 
     var status = Status.OK
     var headers = [String: String]()
-    var body = ""
+    var body = [Int8]()
 
     public init(status: Status, headers: [String: String], body: String) {
         self.status = status
         self.headers = headers
-        self.body = body
+        self.body = body.bytes()
     }
 
     public init(_ content: String) {
-        body = content
+        self.body = content.bytes()
     }
 
     public init(_ status: Status) {

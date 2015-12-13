@@ -60,10 +60,11 @@ public func serve(port: UInt16) {
         var response: Response? = Router.sharedRouter.dispatch(Request(underlying: request))
         if response == nil {
             response = Response(.NotFound)
-            response!.body = Response.Status.NotFound.description
+            response!.body = Response.Status.NotFound.description.bytes()
         }
+        let size = response!.body.filter({ c in return c != 0 }).count
         try writer.write("HTTP/1.0 \(response!.status) \(response!.status.description)\r\n")
-        try writer.write("Content-Length: \(response!.body.characters.count)\r\n")
+        try writer.write("Content-Length: \(size)\r\n")
         for header in response!.headers {
             try writer.write("\(header.0): \(header.1)\r\n")
         }
