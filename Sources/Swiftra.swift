@@ -27,18 +27,6 @@ import struct http4swift.HTTPServer
 import struct http4swift.SocketAddress
 import struct http4swift.Socket
 
-public typealias Handler = (Request) -> (ResponseSource)
-
-class Router {
-    static let sharedRouter = Router()
-
-    var patterns = [(String, Matcher, Handler)]()
-
-    func addPattern(method method: String, pattern: Matcher, handler: Handler) {
-        patterns.append((method, pattern, handler))
-    }
-}
-
 public func get(path: String, handler: Handler) {
     Router.sharedRouter.addPattern(method: "GET", pattern: path, handler: handler)
 }
