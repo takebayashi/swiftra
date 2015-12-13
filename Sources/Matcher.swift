@@ -30,7 +30,7 @@ protocol Matcher {
 
 struct MatcherResult {
 
-    let params = [String: String]()
+    var params = [String: String]()
 
 }
 
@@ -40,6 +40,26 @@ extension String: Matcher {
         // static routing
         if input == self {
             return MatcherResult()
+        }
+        // parameterized routing
+        if self.characters.contains(":") {
+            let inputComponents = input.characters.split("/")
+            let matcherComponents = self.characters.split("/")
+            if (inputComponents.count == matcherComponents.count) {
+                var result = MatcherResult()
+                for i in 0..<inputComponents.count {
+                    let ic = String(inputComponents[i])
+                    let mc = String(matcherComponents[i])
+                    if (mc[mc.startIndex] == ":") {
+                        let k = mc[mc.startIndex.advancedBy(1)..<mc.endIndex]
+                        result.params[k] = ic
+                    }
+                    else if ic != mc {
+                        return nil
+                    }
+                }
+                return result
+            }
         }
         return nil
     }
