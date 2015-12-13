@@ -57,15 +57,7 @@ public func serve(port: UInt16) {
     }
 
     server.serve { (request, writer) in
-        var response: Response?
-        for entry in Router.sharedRouter.patterns {
-            if entry.0 == request.method {
-                if let _ = entry.1.match(request.path) {
-                    response = entry.2(Request(underlying: request)).response()
-                    break
-                }
-            }
-        }
+        var response: Response? = Router.sharedRouter.dispatch(Request(underlying: request))
         if response == nil {
             response = Response(.NotFound)
             response!.body = Response.Status.NotFound.description

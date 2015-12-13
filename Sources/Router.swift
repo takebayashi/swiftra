@@ -32,4 +32,15 @@ class Router {
     func addPattern(method method: String, pattern: Matcher, handler: Handler) {
         patterns.append((method, pattern, handler))
     }
+
+    func dispatch(request: Request) -> Response? {
+        for entry in patterns {
+            if entry.0 == request.method {
+                if let _ = entry.1.match(request.path) {
+                    return entry.2(request).response()
+                }
+            }
+        }
+        return nil
+    }
 }
