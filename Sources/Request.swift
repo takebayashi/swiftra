@@ -53,7 +53,9 @@ public struct Request {
     }
 
     public var bodyString: String {
-        return String.fromCString(body) ?? ""
+        var buffer = body
+        buffer.append(CChar(0))
+        return String.fromCString(buffer) ?? ""
     }
 
 }
