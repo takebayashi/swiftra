@@ -34,6 +34,22 @@ public struct ContentType {
 
 }
 
+extension ContentType: CustomStringConvertible {
+
+    public var description: String {
+        if parameters.count > 0 {
+            let pairs = parameters.map { (k, v) in
+                return "\(k)=\(v)"
+            }
+            return "\(mediaType); \(pairs.joinWithSeparator("; "))"
+        }
+        else {
+            return mediaType
+        }
+    }
+
+}
+
 extension Request {
 
     public var contentType: ContentType {
