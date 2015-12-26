@@ -59,6 +59,7 @@ public struct Response {
         case UnsupportedMediaType = 415
         case RequestedRangeNotSatisfiable = 416
         case ExpectationFailed = 417
+        case UnavailableForLegalReasons = 451
         case InternalServerError = 500
         case NotImplemented = 501
         case BadGateway = 502
@@ -159,6 +160,8 @@ extension Response.Status: CustomStringConvertible {
             return "Requested Range Not Satisfiable"
         case ExpectationFailed:
             return "Expectation Failed"
+        case UnavailableForLegalReasons:
+            return "Unavailable For Legal Reasons"
         case InternalServerError:
             return "Internal Server Error"
         case NotImplemented:
