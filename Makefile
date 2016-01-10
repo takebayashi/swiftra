@@ -1,5 +1,6 @@
 SWIFTC=swiftc
-PRODUCT_NAME=swiftra
+
+TEST_DEP_LIBS = http4swift swiftra
 
 ifeq ($(shell uname), Linux)
 	SWIFTC_OPTS="-lswiftGlibc"
@@ -13,8 +14,8 @@ clean:
 
 build:
 	swift build --configuration debug
-	cp .build/debug/swiftra.a .build/debug/libswiftra.a
+	$(foreach lib,$(TEST_DEP_LIBS), cp .build/debug/$(lib).a .build/debug/lib$(lib).a;)
 
 test: build
-	$(SWIFTC) $(SWIFTC_OPTS) -I.build/debug Tests/*.swift -o .build/test -v -L.build/debug -lswiftra
+	$(SWIFTC) $(SWIFTC_OPTS) -I.build/debug Tests/*.swift -o .build/test -v -L.build/debug $(foreach lib,$(TEST_DEP_LIBS),-l$(lib))
 	.build/test

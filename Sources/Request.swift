@@ -115,11 +115,22 @@ struct ParameterizedRequest: Request {
     var parameters: [String: String] {
         get {
             var fields = underlying.parameters
-            self.parameters.forEach { (key, value) in
+            params.forEach { (key, value) in
                 fields.updateValue(value, forKey: key)
             }
             return fields
         }
     }
+
+}
+
+struct FixedRequest: Request {
+
+    var method: String = "GET"
+    var path: String = "/"
+    var proto: String = "HTTP/1.0"
+    var headers: [String: String] = [String: String]()
+    var body: [CChar] = [CChar]()
+    var parameters: [String: String] = [String: String]()
 
 }

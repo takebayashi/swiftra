@@ -22,14 +22,29 @@
  SOFTWARE.
 */
 
-protocol TestCase {
-    func runAll()
+@testable import swiftra
+
+class RouterTests: TestCase {
+
+    func runAll() {
+        testKeywords()
+    }
+
+    func testKeywords() {
+        let router = Router()
+        router.addPattern(method: "GET", pattern: "/:key1/:key2") { request in
+            return request.parameters["key1"]! + request.parameters["key2"]!
+        }
+
+        var request = FixedRequest()
+        request.path = "/foo/bar"
+
+        if let response = router.dispatch(request) {
+            assert(response.body == "foobar".bytes(), "keyword dispatch")
+        }
+        else {
+            assert(false, "keyword dispatch error")
+        }
+    }
+
 }
-
-var tests: [TestCase] = [MatcherTests(), RouterTests()]
-
-for test in tests {
-    test.runAll()
-}
-
-print("test completed")

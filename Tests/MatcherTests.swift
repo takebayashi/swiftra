@@ -35,6 +35,7 @@ class MatcherTests: TestCase {
         assert("/foo/bar".match("/foo/baz") == nil, "static routing (not found)")
 
         assert("/foo/:key".match("/foo/bar") != nil, "keyword routing")
+        assert("/foo/:key".match("/foo/bar")!.params["key"] == "bar", "routing parameter")
         assert("/foo/:key".match("/baz/bar") == nil, "keyword routing (not found)")
     }
 
