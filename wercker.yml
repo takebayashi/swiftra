@@ -2,6 +2,6 @@ box: swiftdocker/swift
 build:
   steps:
     - script:
-      name: build
+      name: test
       code: |
-        swift build
+        make test
