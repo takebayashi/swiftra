@@ -24,7 +24,28 @@
 
 import struct http4swift.HTTPRequest
 
-public struct Request {
+public protocol Request {
+
+    var method: String { get }
+    var path: String { get }
+    var proto: String { get }
+    var headers: [String: String] { get }
+    var body: [CChar] { get }
+    var bodyString: String { get }
+
+}
+
+extension Request {
+
+    public var bodyString: String {
+        var buffer = body
+        buffer.append(CChar(0))
+        return String.fromCString(buffer) ?? ""
+    }
+
+}
+
+public struct RawRequest: Request {
 
     let underlying: HTTPRequest
 
@@ -50,12 +71,6 @@ public struct Request {
 
     public var body: [CChar] {
         return underlying.body
-    }
-
-    public var bodyString: String {
-        var buffer = body
-        buffer.append(CChar(0))
-        return String.fromCString(buffer) ?? ""
     }
 
 }

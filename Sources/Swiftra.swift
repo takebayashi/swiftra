@@ -57,7 +57,7 @@ public func serve(port: UInt16) {
     }
 
     server.serve { (request, writer) in
-        var response: Response? = Router.sharedRouter.dispatch(Request(underlying: request))
+        var response: Response? = Router.sharedRouter.dispatch(RawRequest(underlying: request))
         if response == nil {
             response = Response(.NotFound)
             response!.body = Response.Status.NotFound.description.bytes()
