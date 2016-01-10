@@ -36,7 +36,14 @@ class Router {
     func dispatch(request: Request) -> Response? {
         for entry in patterns {
             if entry.0 == request.method {
-                if let _ = entry.1.match(request.path) {
+                if let result = entry.1.match(request.path) {
+                    if result.params.count > 0 {
+                        let wrapped = ParameterizedRequest(
+                            underlying: request,
+                            parameters: result.params
+                        )
+                        return entry.2(wrapped).response()
+                    }
                     return entry.2(request).response()
                 }
             }
