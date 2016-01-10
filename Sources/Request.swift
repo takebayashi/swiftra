@@ -32,6 +32,7 @@ public protocol Request {
     var headers: [String: String] { get }
     var body: [CChar] { get }
     var bodyString: String { get }
+    var parameters: [String: String] { get }
 
 }
 
@@ -45,7 +46,7 @@ extension Request {
 
 }
 
-public struct RawRequest: Request {
+struct RawRequest: Request {
 
     let underlying: HTTPRequest
 
@@ -53,24 +54,72 @@ public struct RawRequest: Request {
         self.underlying = underlying
     }
 
-    public var method: String {
+    var method: String {
         return underlying.method
     }
 
-    public var path: String {
+    var path: String {
         return underlying.path
     }
 
-    public var proto: String {
+    var proto: String {
         return underlying.proto
     }
 
-    public var headers: [String: String] {
+    var headers: [String: String] {
         return underlying.headers
     }
 
-    public var body: [CChar] {
+    var body: [CChar] {
         return underlying.body
+    }
+
+    var parameters: [String: String] {
+        // TODO: return from URI query or body parameters
+        return [String: String]()
+    }
+
+}
+
+struct ParameterizedRequest: Request {
+
+    let underlying: Request
+
+    let params: [String: String]
+
+    init(underlying: Request, parameters: [String: String]) {
+        self.underlying = underlying
+        self.params = parameters
+    }
+
+    var method: String {
+        return underlying.method
+    }
+
+    var path: String {
+        return underlying.path
+    }
+
+    var proto: String {
+        return underlying.proto
+    }
+
+    var headers: [String: String] {
+        return underlying.headers
+    }
+
+    var body: [CChar] {
+        return underlying.body
+    }
+
+    var parameters: [String: String] {
+        get {
+            var fields = underlying.parameters
+            self.parameters.forEach { (key, value) in
+                fields.updateValue(value, forKey: key)
+            }
+            return fields
+        }
     }
 
 }
