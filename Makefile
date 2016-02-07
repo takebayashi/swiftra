@@ -1,6 +1,6 @@
 SWIFTC=swiftc
 
-TEST_DEP_LIBS = http4swift swiftra
+TEST_DEP_LIBS = http4swift swiftra Nest
 
 ifeq ($(shell uname), Linux)
 	SWIFTC_OPTS="-lswiftGlibc"

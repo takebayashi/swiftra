@@ -22,24 +22,24 @@
  SOFTWARE.
 */
 
-import struct http4swift.HTTPRequest
+import Nest
 
 public protocol Request {
 
     var method: String { get }
     var path: String { get }
     var proto: String { get }
-    var headers: [String: String] { get }
-    var body: [CChar] { get }
-    var bodyString: String { get }
+    var headers: [Header] { get }
+    var bodyBytes: [CChar] { get }
+    var body: String { get }
     var parameters: [String: String] { get }
 
 }
 
 extension Request {
 
-    public var bodyString: String {
-        var buffer = body
+    public var body: String {
+        var buffer = bodyBytes
         buffer.append(CChar(0))
         return String.fromCString(buffer) ?? ""
     }
@@ -48,9 +48,9 @@ extension Request {
 
 struct RawRequest: Request {
 
-    let underlying: HTTPRequest
+    let underlying: RequestType
 
-    init(underlying: HTTPRequest) {
+    init(underlying: RequestType) {
         self.underlying = underlying
     }
 
@@ -63,15 +63,15 @@ struct RawRequest: Request {
     }
 
     var proto: String {
-        return underlying.proto
+        return "HTTP/1.0"
     }
 
-    var headers: [String: String] {
+    var headers: [Header] {
         return underlying.headers
     }
 
-    var body: [CChar] {
-        return underlying.body
+    var bodyBytes: [CChar] {
+        return underlying.body?.bytes() ?? []
     }
 
     var parameters: [String: String] {
@@ -104,12 +104,12 @@ struct ParameterizedRequest: Request {
         return underlying.proto
     }
 
-    var headers: [String: String] {
+    var headers: [Header] {
         return underlying.headers
     }
 
-    var body: [CChar] {
-        return underlying.body
+    var bodyBytes: [CChar] {
+        return underlying.bodyBytes
     }
 
     var parameters: [String: String] {
@@ -129,8 +129,8 @@ struct FixedRequest: Request {
     var method: String = "GET"
     var path: String = "/"
     var proto: String = "HTTP/1.0"
-    var headers: [String: String] = [String: String]()
-    var body: [CChar] = [CChar]()
+    var headers: [Header] = [Header]()
+    var bodyBytes: [CChar] = [CChar]()
     var parameters: [String: String] = [String: String]()
 
 }

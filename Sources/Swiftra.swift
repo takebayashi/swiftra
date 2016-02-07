@@ -22,7 +22,7 @@
  SOFTWARE.
 */
 
-import struct http4swift.HTTPRequest
+import Nest
 import struct http4swift.HTTPServer
 import struct http4swift.SocketAddress
 import struct http4swift.Socket
