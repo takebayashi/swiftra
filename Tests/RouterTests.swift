@@ -40,7 +40,7 @@ class RouterTests: TestCase {
         request.path = "/foo/bar"
 
         if let response = router.dispatch(request) {
-            assert(response.body == "foobar".bytes(), "keyword dispatch")
+            assert(response.body == "foobar", "keyword dispatch")
         }
         else {
             assert(false, "keyword dispatch error")

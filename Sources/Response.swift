@@ -22,7 +22,9 @@
  SOFTWARE.
 */
 
-public struct Response {
+import Nest
+
+public struct Response: ResponseType {
 
     public enum Status: Int {
         case Continue = 100
@@ -69,17 +71,29 @@ public struct Response {
     }
 
     var status = Status.OK
-    var headers = [String: String]()
-    var body = [Int8]()
+    public var headers = [Header]()
+    var bodyBytes = [Int8]()
 
-    public init(status: Status, headers: [String: String], body: String) {
+    public var statusLine: String {
+        get {
+            return "HTTP/1.0 \(self.status.rawValue) \(self.status)"
+        }
+    }
+
+    public var body: String? {
+        get {
+            return String.fromCString(bodyBytes)
+        }
+    }
+
+    public init(status: Status, headers: [Header], body: String) {
         self.status = status
         self.headers = headers
-        self.body = body.bytes()
+        self.bodyBytes = body.bytes()
     }
 
     public init(_ content: String) {
-        self.body = content.bytes()
+        self.bodyBytes = content.bytes()
     }
 
     public init(_ status: Status) {
