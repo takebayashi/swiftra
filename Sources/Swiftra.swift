@@ -56,19 +56,12 @@ public func serve(port: UInt16) {
         return
     }
 
-    server.serve { (request, writer) in
+    server.serve { (request) -> ResponseType in
         var response: Response? = Router.sharedRouter.dispatch(RawRequest(underlying: request))
         if response == nil {
             response = Response(.NotFound)
             response!.bodyBytes = Response.Status.NotFound.description.bytes()
         }
-        let size = response!.bodyBytes.filter({ c in return c != 0 }).count
-        try writer.write("HTTP/1.0 \(response!.status.rawValue) \(response!.status)\r\n")
-        try writer.write("Content-Length: \(size)\r\n")
-        for header in response!.headers {
-            try writer.write("\(header.0): \(header.1)\r\n")
-        }
-        try writer.write("\r\n")
-        try writer.write(response!.bodyBytes)
+        return response!
     }
 }
