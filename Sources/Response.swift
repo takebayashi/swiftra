@@ -76,7 +76,7 @@ public struct Response: ResponseType {
 
     public var statusLine: String {
         get {
-            return "HTTP/1.0 \(self.status.rawValue) \(self.status)"
+            return "\(self.status.rawValue) \(self.status)"
         }
     }
 
