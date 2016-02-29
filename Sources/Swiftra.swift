@@ -24,8 +24,6 @@
 
 import Nest
 import struct http4swift.HTTPServer
-import struct http4swift.SocketAddress
-import struct http4swift.Socket
 
 public func get(path: String, handler: Handler) {
     Router.sharedRouter.addPattern(method: "GET", pattern: path, handler: handler)
@@ -48,14 +46,9 @@ public func head(path: String, handler: Handler) {
 }
 
 public func serve(port: UInt16) {
-    let addr = SocketAddress(port: port)
-    guard let sock = Socket() else {
+    guard let server = HTTPServer(port: port) else {
         return
     }
-    guard let server = HTTPServer(socket: sock, addr: addr) else {
-        return
-    }
-
     server.serve { (request) -> ResponseType in
         var response: Response? = Router.sharedRouter.dispatch(RawRequest(underlying: request))
         if response == nil {
