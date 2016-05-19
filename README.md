@@ -2,6 +2,10 @@
 
 Swiftra is a library that provides DSLs like Sinatra.
 
+## System Requirements
+
+DEVELOPMENT-SNAPSHOT-2016-02-08-a
+
 ## Example
 
 See [swiftra-example](https://github.com/takebayashi/swiftra-example).
