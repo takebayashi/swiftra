@@ -48,6 +48,8 @@ public func head(path: String, handler: Handler) {
 }
 
 public func serve(port: UInt16) {
+    let stringValue = "access : http://localhost:\(port)"
+    print(stringValue)
     let addr = SocketAddress(port: port)
     guard let sock = Socket() else {
         return
@@ -62,6 +64,7 @@ public func serve(port: UInt16) {
             response = Response(.NotFound)
             response!.bodyBytes = Response.Status.NotFound.description.bytes()
         }
+        print(request.method)
         return response!
     }
 }
